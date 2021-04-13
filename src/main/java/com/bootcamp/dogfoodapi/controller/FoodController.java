@@ -2,7 +2,7 @@ package com.bootcamp.dogfoodapi.controller;
 
 import com.bootcamp.dogfoodapi.dto.FoodDTO;
 import com.bootcamp.dogfoodapi.dto.QuantityDTO;
-import com.bootcamp.dogfoodapi.exception.DogFoodExceededException;
+import com.bootcamp.dogfoodapi.exception.FoodStockExceededException;
 import com.bootcamp.dogfoodapi.exception.FoodAlreadyRegisteredException;
 import com.bootcamp.dogfoodapi.exception.FoodNotFoundException;
 import com.bootcamp.dogfoodapi.service.FoodService;
@@ -52,8 +52,13 @@ public class FoodController implements FoodControllerDocs {
 	}
 
 	@PatchMapping("/{id}/increment")
-	public FoodDTO increment(@PathVariable Long id, @RequestBody QuantityDTO quantityDTO) throws FoodNotFoundException, DogFoodExceededException {
+	public FoodDTO increment(@PathVariable Long id, @RequestBody QuantityDTO quantityDTO) throws FoodNotFoundException, FoodStockExceededException {
 	    return foodService.increment(id, quantityDTO.getQuantity());
+	}
+
+	@PatchMapping("/{id}/decrement")
+	public FoodDTO decrement(@PathVariable Long id, @RequestBody @Valid QuantityDTO quantityDTO) throws  FoodNotFoundException, FoodStockExceededException {
+	return  foodService.decrement(id, quantityDTO.getQuantity());
 	}
 
 }

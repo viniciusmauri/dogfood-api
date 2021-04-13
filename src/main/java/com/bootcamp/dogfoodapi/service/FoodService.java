@@ -3,7 +3,7 @@ package com.bootcamp.dogfoodapi.service;
 import lombok.AllArgsConstructor;
 import com.bootcamp.dogfoodapi.dto.FoodDTO;
 import com.bootcamp.dogfoodapi.entity.Food;
-import com.bootcamp.dogfoodapi.exception.DogFoodExceededException;
+import com.bootcamp.dogfoodapi.exception.FoodStockExceededException;
 import com.bootcamp.dogfoodapi.exception.FoodAlreadyRegisteredException;
 import com.bootcamp.dogfoodapi.exception.FoodNotFoundException;
 import com.bootcamp.dogfoodapi.mapper.FoodMapper;
@@ -70,7 +70,7 @@ public class FoodService {
 		}
 	}
 
-	public FoodDTO increment(Long id, int quantityToIncrement) throws FoodNotFoundException, DogFoodExceededException {
+	public FoodDTO increment(Long id, int quantityToIncrement) throws FoodNotFoundException, FoodStockExceededException {
 		Food footToIncrementStock = veifyIfExists(id);
 		int quanityAfterIncrement = quantityToIncrement + footToIncrementStock.getQuantity();
 			if(quanityAfterIncrement <= footToIncrementStock.getMax()) {
@@ -78,6 +78,17 @@ public class FoodService {
 				Food incrementFoodStock = foodRepository.save(footToIncrementStock);
 				return foodMapper.toDTO(incrementFoodStock);
 			}
-			throw new DogFoodExceededException(id, quantityToIncrement);
+			throw new FoodStockExceededException(id, quantityToIncrement);
+	}
+
+	public FoodDTO decrement(Long id, int quantityToDecrement) throws  FoodNotFoundException, FoodStockExceededException {
+		Food foodToDecrementStock = veifyIfExists(id);
+		int foodStockAfterDecremented = foodToDecrementStock.getQuantity() - quantityToDecrement;
+		if(foodStockAfterDecremented >= 0){
+			foodToDecrementStock .setQuantity(foodStockAfterDecremented);
+			Food decrementedFoodStock = foodRepository.save(foodToDecrementStock);
+			return  foodMapper.toDTO(decrementedFoodStock);
+		}
+		throw new FoodStockExceededException(id, quantityToDecrement);
 	}
 }
