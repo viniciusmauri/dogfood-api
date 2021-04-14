@@ -28,3 +28,8 @@ Após executar o comando acima, acessar o link:
 ```
 http://localhost:8080/api/v1/foods
 ```
+
+Para verificar a documentação da API pelo Swagger, basta rodar o projeto e acessar o link:
+```
+http://localhost:8080/swagger-ui.html
+```
