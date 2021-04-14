@@ -77,11 +77,9 @@ public class FoodControllerTest {
 
 	@Test
 	void whenPOSTIsCalledWithoutRequiredFieldThenAnErrorIsReturned() throws Exception {
-		//given
 		FoodDTO foodDTO = FoodDTOBuilder.builder().build().toFoodDTO();
 		foodDTO.setBrand(null);
 
-		//then
 		mockMvc.perform(post(FOOD_API_URL_PATH)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(asJsonString(foodDTO)))
@@ -90,13 +88,10 @@ public class FoodControllerTest {
 
 	@Test
 	void whenGETIsCalledWithValidNameThenOkStatusIsReturned() throws Exception {
-		// given
 		FoodDTO foodDTO = FoodDTOBuilder.builder().build().toFoodDTO();
 
-		//when
 		when(foodService.findByName(foodDTO.getName())).thenReturn(foodDTO);
 
-		// then
 		mockMvc.perform(MockMvcRequestBuilders.get(FOOD_API_URL_PATH + "/" + foodDTO.getName())
 				.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
@@ -107,13 +102,10 @@ public class FoodControllerTest {
 
 	@Test
 	void whenGETIsCalledWithoutRegisteredNameThenNotFoundStatusIsReturned() throws Exception {
-		// given
 		FoodDTO foodDTO = FoodDTOBuilder.builder().build().toFoodDTO();
 
-		//when
 		when(foodService.findByName(foodDTO.getName())).thenThrow(FoodNotFoundException.class);
 
-		// then
 		mockMvc.perform(MockMvcRequestBuilders.get(FOOD_API_URL_PATH + "/" + foodDTO.getName())
 				.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isNotFound());
@@ -121,13 +113,10 @@ public class FoodControllerTest {
 
 	@Test
 	void whenGETListWithFoodsIsCalledThenOkStatusIsReturned() throws Exception {
-		// given
 		FoodDTO foodDTO = FoodDTOBuilder.builder().build().toFoodDTO();
 
-		//when
 		when(foodService.listAll()).thenReturn(Collections.singletonList(foodDTO));
 
-		// then
 		mockMvc.perform(MockMvcRequestBuilders.get(FOOD_API_URL_PATH)
 				.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
@@ -138,13 +127,10 @@ public class FoodControllerTest {
 
 	@Test
 	void whenGETListWithoutFoodsIsCalledThenOkStatusIsReturned() throws Exception {
-		// given
 		FoodDTO foodDTO = FoodDTOBuilder.builder().build().toFoodDTO();
 
-		//when
 		when(foodService.listAll()).thenReturn(Collections.singletonList(foodDTO));
 
-		// then
 		mockMvc.perform(MockMvcRequestBuilders.get(FOOD_API_URL_PATH)
 				.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk());
@@ -152,13 +138,10 @@ public class FoodControllerTest {
 
 	@Test
 	void whenDELETEIsCalledWithValidIdThenNoContentStatusIsReturned() throws Exception {
-		// given
 		FoodDTO foodDTO = FoodDTOBuilder.builder().build().toFoodDTO();
 
-		//when
 		doNothing().when(foodService).deleteById(foodDTO.getId());
 
-		// then
 		mockMvc.perform(MockMvcRequestBuilders.delete(FOOD_API_URL_PATH + "/" + foodDTO.getId())
 				.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isNoContent());
@@ -166,10 +149,8 @@ public class FoodControllerTest {
 
 	@Test
 	void whenDELETEIsCalledWithInvalidIdThenNotFoundStatusIsReturned() throws Exception {
-		//when
 		doThrow(FoodNotFoundException.class).when(foodService).deleteById(INVALID_FOOD_ID);
 
-		// then
 		mockMvc.perform(MockMvcRequestBuilders.delete(FOOD_API_URL_PATH + "/" + INVALID_FOOD_ID)
 				.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isNotFound());
